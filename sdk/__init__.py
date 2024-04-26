@@ -49,6 +49,7 @@ class OpenAPI(object):
             pprint(resp_dict, indent=4)
             if resp_dict['code'] == 401:
                 self.authorize()
+                self.__post__(url, jsonForm)
             elif resp_dict['code'] == 0:
                 return resp_dict
             else:
