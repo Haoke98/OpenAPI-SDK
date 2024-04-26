@@ -8,23 +8,37 @@
 ======================================="""
 import datetime
 import logging
+import os.path
 import time
 from pprint import pprint
+import json
 
 import requests
 
 
 class OpenAPI(object):
+    session_file = os.path.expanduser('~/openapi-session.json')
 
     def __init__(self, username: str, password: str, baseurl: str = "https://open.0p.fit/data-center"):
         self.username = username
         self.password = password
         self.baseurl = baseurl
-        self.session = {
+        self.load_session()
+
+    def load_session(self):
+        print("session loaded from %s" % self.session_file)
+        if os.path.exists(self.session_file):
+            with open(self.session_file,'r',encoding='utf-8') as f:
+                    self.session = json.load(f)
+        else:
+            self.session = {
             "key": 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTTFJDLUNvbXBhbnktc2FkYW0iLCJzdWIiOiJhZjZlNTU1Mi0zMTBlLTQzMjAtYjk4OC1iZWQyYjk0ODMzY2EiLCJuYW1lIjoidGVzdC11c2VyLTAwMDIzIiwiZXhwIjoxNzEzOTU2NTQ5fQ.tf0R9zRg15E73sWezvt6I_oAp5w58fQb75slJ3dXfa4',
             "expire": 3600,
             "status": 0
         }
+    def save_session(self):
+        with open(self.session_file,'w',encoding='utf-8') as f:
+            json.dump(self.session,f,ensure_ascii=False)
 
     def __get_headers__(self):
         return {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT',
@@ -39,6 +53,7 @@ class OpenAPI(object):
         }
         resp = self.__post__(url, jsonForm)
         self.session = resp['data']
+        self.save_session()
 
     def __post__(self, url, jsonForm):
         resp = requests.post(url,
