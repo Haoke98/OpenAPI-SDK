@@ -19,10 +19,12 @@ import requests
 class OpenAPI(object):
     session_file = os.path.expanduser('~/openapi-session.json')
 
-    def __init__(self, username: str, password: str, baseurl: str = "https://open.0p.fit/data-center"):
+    def __init__(self, username: str, password: str, baseurl: str = "https://open.0p.fit/data-center",
+                 ssl_verify: bool = True):
         self.username = username
         self.password = password
         self.baseurl = baseurl
+        self.ssl_verify = ssl_verify
         self.load_session()
 
     def load_session(self):
@@ -59,8 +61,8 @@ class OpenAPI(object):
         jsonForm["requestId"] = datetime.datetime.now().strftime("%Y%m%d%H%M")
         jsonForm["timestamp"] = time.time()
         jsonForm['sign'] = 'd15e5a64302e9dc9b54efb04500c13c6'
-        print(url)
-        resp = requests.post(url, json=jsonForm, headers=self.__get_headers__())
+        print(url, self.__get_headers__())
+        resp = requests.post(url, json=jsonForm, headers=self.__get_headers__(), verify=self.ssl_verify)
         if resp.status_code == 200:
             resp_dict = resp.json()
             pprint(resp_dict, indent=4)
