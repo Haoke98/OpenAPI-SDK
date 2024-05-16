@@ -76,8 +76,25 @@ class OpenAPI(object):
         else:
             logging.error(f"[{resp}, {resp.text}]")
 
-    def check(self, jsonForm: dict):
-        url = self.baseurl + '/rest/ent/check'
+    def ms_ent_verify_tri_factor(self, jsonForm: dict):
+        """
+        市场主体三要素验证接口
+        :param jsonForm:
+        :return:
+        """
+        url = self.baseurl + '/rest/ent/verification/tri-factor'
+        self.__post__(url, jsonForm)
+
+    def ms_ent_verify_quad_factor(self, jsonForm: dict):
+        url = self.baseurl + '/rest/ent/verification/quad-factor'
+        self.__post__(url, jsonForm)
+
+    def ms_ent_verify_tri_factor_shareholder(self, jsonForm: dict):
+        url = self.baseurl + '/rest/ent/verification/tri-factor-shareholder'
+        self.__post__(url, jsonForm)
+
+    def ms_ent_verify_quad_factor_shareholder(self, jsonForm: dict):
+        url = self.baseurl + '/rest/ent/verification/quad-factor-shareholder'
         self.__post__(url, jsonForm)
 
     def bypass_domains(self):
