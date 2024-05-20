@@ -96,6 +96,14 @@ class OpenAPI(object):
     def ms_ent_verify_quad_factor_shareholder(self, jsonForm: dict):
         url = self.baseurl + '/rest/ent/verification/quad-factor-shareholder'
         self.__post__(url, jsonForm)
+    def ms_ent_verify_person_role_match(self, jsonForm: dict):
+        """
+        市场主体与自然人身份关系验证接口
+        :param jsonForm:
+        :return:
+        """
+        url = self.baseurl + '/rest/ent/verification/person-role-match'
+        self.__post__(url, jsonForm)
 
     def bypass_domains(self):
         url = self.baseurl + '/rest/net/bypass_domains'
