@@ -17,6 +17,7 @@ import requests
 
 
 class OpenAPI(object):
+    version = "1.14.0"
     session_file = os.path.expanduser('~/openapi-session.json')
 
     def __init__(self, username: str, password: str, baseurl: str = "https://open.0p.fit/data-center",
@@ -85,24 +86,34 @@ class OpenAPI(object):
         url = self.baseurl + '/rest/ent/verification/tri-factor'
         self.__post__(url, jsonForm)
 
-    def ms_ent_verify_quad_factor(self, jsonForm: dict):
+    def ent_verify_quad_factor(self, jsonForm: dict):
         url = self.baseurl + '/rest/ent/verification/quad-factor'
         self.__post__(url, jsonForm)
 
-    def ms_ent_verify_tri_factor_shareholder(self, jsonForm: dict):
+    def ent_verify_tri_factor_shareholder(self, jsonForm: dict):
         url = self.baseurl + '/rest/ent/verification/tri-factor-shareholder'
         self.__post__(url, jsonForm)
 
-    def ms_ent_verify_quad_factor_shareholder(self, jsonForm: dict):
+    def ent_verify_quad_factor_shareholder(self, jsonForm: dict):
         url = self.baseurl + '/rest/ent/verification/quad-factor-shareholder'
         self.__post__(url, jsonForm)
-    def ms_ent_verify_person_role_match(self, jsonForm: dict):
+
+    def ent_verify_person_role_match_quad_factor(self, jsonForm: dict):
         """
-        市场主体与自然人身份关系验证接口
+        市场主体与自然人身份关系四要素验证接口
         :param jsonForm:
         :return:
         """
-        url = self.baseurl + '/rest/ent/verification/person-role-match'
+        url = self.baseurl + '/rest/ent/verification/person-role-match/quad-factor'
+        self.__post__(url, jsonForm)
+
+    def ent_verify_person_role_match_tri_factor(self, jsonForm: dict):
+        """
+        市场主体与自然人身份关系三要素验证接口
+        :param jsonForm:
+        :return:
+        """
+        url = self.baseurl + '/rest/ent/verification/person-role-match/tri-factor'
         self.__post__(url, jsonForm)
 
     def bypass_domains(self):
