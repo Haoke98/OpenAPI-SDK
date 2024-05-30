@@ -20,11 +20,23 @@ class OpenAPI(object):
     version = "1.14.0"
     session_file = os.path.expanduser('~/openapi-session.json')
 
-    def __init__(self, username: str, password: str, baseurl: str = "https://open.0p.fit/data-center",
+    def __init__(self, appKey: str = None, appSecret: str = None, baseurl: str = None,
                  ssl_verify: bool = True):
-        self.username = username
-        self.password = password
-        self.baseurl = baseurl
+        if appKey is None:
+            self.username = os.getenv("openapi-app-key")
+        else:
+            self.username = appKey
+        if appSecret is None:
+            self.password = os.getenv("openapi-app-secret")
+        else:
+            self.password = appSecret
+        env_baseurl = os.getenv("openapi-baseurl")
+        if baseurl is not None:
+            self.baseurl = baseurl
+        elif env_baseurl is not None:
+            self.baseurl = env_baseurl
+        else:
+            self.baseurl = "https://open.0p.fit/data-center"
         self.ssl_verify = ssl_verify
         self.load_session()
 
