@@ -67,7 +67,8 @@ class OpenAPI(object):
             "pwd": self.password
         }
         resp = self.__post__(url, jsonForm)
-        self.session = resp['data']
+        # FIXME: 这里返回的Reps永远是None
+        self.session = resp
         self.save_session()
 
     def __post__(self, url, jsonForm):
@@ -82,8 +83,10 @@ class OpenAPI(object):
             if resp_dict['code'] == 401:
                 self.authorize()
                 self.__post__(url, jsonForm)
+            elif resp_dict['code'] == 9999:
+                raise Exception("用户名和密码错误")
             elif resp_dict['code'] == 0:
-                return resp_dict
+                return resp_dict['data']
             else:
                 logging.error(f"请求异常:{resp_dict}")
         else:
@@ -126,7 +129,11 @@ class OpenAPI(object):
         :return:
         """
         url = self.baseurl + '/rest/ent/verification/person-role-match/tri-factor'
-        self.__post__(url, jsonForm)
+        return self.__post__(url, jsonForm)
+
+    def ent_details_by_uscc(self, jsonForm):
+        url = self.baseurl + '/rest/ent/details/uscc'
+        return self.__post__(url, jsonForm)
 
     def bypass_domains(self):
         url = self.baseurl + '/rest/net/bypass_domains'
