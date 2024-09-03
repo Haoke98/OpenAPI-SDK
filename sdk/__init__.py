@@ -45,7 +45,7 @@ class OpenAPI(object):
         if os.path.exists(self.session_file):
             with open(self.session_file, 'r', encoding='utf-8') as f:
                 self.session = json.load(f)
-        else:
+        if self.session is None:
             self.session = {
                 "key": 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTTFJDLUNvbXBhbnktc2FkYW0iLCJzdWIiOiJhZjZlNTU1Mi0zMTBlLTQzMjAtYjk4OC1iZWQyYjk0ODMzY2EiLCJuYW1lIjoidGVzdC11c2VyLTAwMDIzIiwiZXhwIjoxNzEzOTU2NTQ5fQ.tf0R9zRg15E73sWezvt6I_oAp5w58fQb75slJ3dXfa4',
                 "expire": 3600,
