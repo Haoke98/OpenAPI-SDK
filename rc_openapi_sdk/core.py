@@ -17,20 +17,20 @@ import requests
 
 
 class OpenAPI(object):
-    version = "1.14.0"
     session_file = os.path.expanduser('~/openapi-session.json')
+    session = None
 
     def __init__(self, appKey: str = None, appSecret: str = None, baseurl: str = None,
                  ssl_verify: bool = True):
         if appKey is None:
-            self.username = os.getenv("openapi-app-key")
+            self.username = os.getenv("RC-OPEN-API-KEY")
         else:
             self.username = appKey
         if appSecret is None:
-            self.password = os.getenv("openapi-app-secret")
+            self.password = os.getenv("RC-OPEN-API-SECRET")
         else:
             self.password = appSecret
-        env_baseurl = os.getenv("openapi-baseurl")
+        env_baseurl = os.getenv("RC-OPEN-API-BASEURL")
         if baseurl is not None:
             self.baseurl = baseurl
         elif env_baseurl is not None:
@@ -71,7 +71,7 @@ class OpenAPI(object):
         self.session = resp
         self.save_session()
 
-    def __post__(self, url, jsonForm):
+    def __post__(self, url, jsonForm: dict):
         jsonForm["requestId"] = datetime.datetime.now().strftime("%Y%m%d%H%M")
         jsonForm["timestamp"] = time.time()
         jsonForm['sign'] = 'd15e5a64302e9dc9b54efb04500c13c6'
@@ -138,3 +138,30 @@ class OpenAPI(object):
     def bypass_domains(self):
         url = self.baseurl + '/rest/net/bypass_domains'
         self.__post__(url, {})
+
+    def direct_dsl(self, dsl_body: dict):
+        jsonForm = {"dsl_body": json.dumps(dsl_body)}
+        url = self.baseurl + '/rest/dsl-direct/query'
+        return self.__post__(url, jsonForm)
+
+    def investment_promotion_regional(self, area_code: str, node_code: str):
+        """
+        区域性招商
+        :param area_code:
+        :param node_code:
+        :return:
+        """
+        url = self.baseurl + '/rest/investment-promotion/regional'
+        jsonForm = {"areaCode": area_code, "nodeCode": node_code}
+        return self.__post__(url, jsonForm)
+
+    def investment_promotion_ranking(self, area_code: str, node_code: str):
+        """
+        榜单招商
+        :param area_code:
+        :param node_code:
+        :return:
+        """
+        url = self.baseurl + '/rest/investment-promotion/ranking'
+        jsonForm = {"areaCode": area_code, "nodeCode": node_code}
+        return self.__post__(url, jsonForm)
